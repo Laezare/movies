@@ -4,13 +4,64 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Movies</h1>
 
-    <section class="moovie">
+    <div>
+        <h1 class="title">Films à l'affiche</h1>
+    </div>
+
+    <section class="moovie_popular">
+
+
+
+    {% for pm in popular_movies %}
+
+        <div class="moovie_popular_item" id="data">
+
+
+            <script>
+                    fetch('https://api.themoviedb.org/3/movie/{{ pm.id }}?api_key=efb085c962ddea6d1ae6e43ca6aa7a37')
+                    .then(res => res.json())
+                    .then((out) => {
+                    return document.getElementById('dynamicImg{{ pm.id }}').src = ('https://image.tmdb.org/t/p/original'+out.poster_path);
+                    }).catch(err => console.error(err))
+            </script>
+
+            <img id="dynamicImg{{ pm.id }}" src="" onerror="this.src='static/images/default.jpg'" />
+            <!--
+            {% if pm.belongs_to_collection %}
+                <img src="https://image.tmdb.org/t/p/original{{ (pm.belongs_to_collection).split(":")[3].split("'")[1] }}" onerror="this.src='static/images/default.jpg'">
+            {% elif pm.poster_path %}
+                <img src="https://image.tmdb.org/t/p/original{{ pm.poster_path }}" onerror="this.src='static/images/default.jpg'">
+            {% endif %}
+            -->
+            <span>
+            <form method="post">
+                <input type="hidden" name="movie_id"  value="{{ pm.id }}"/>
+                <input type="submit" value="Détail" />
+            </form>
+                <h3 class="movie_title">{{pm.title}}</h3>
+            <span>
+                <p class="genres">
+                {% set genres_liste = pm.genres.split(", 'name':") %}
+                {% for genre in genres_liste[1:] %}
+                     {{ genre.split("'")[1] }}
+                {% endfor %}
+                <p/></span>
+            </span>
+        </div>
+
+
+    {% endfor %}
+
+    </section>
+
+<h1 class="title">A découvrir</h1>
+
+    <section class="moovie_random">
 
     {% for movie in movies %}
 
-        <div class="moovie_item" id="data">
+        <div class="moovie_random_item" id="data">
 
             <p>{{movie.title}}</p>
 
@@ -18,7 +69,6 @@
                     fetch('https://api.themoviedb.org/3/movie/{{ movie.id }}?api_key=efb085c962ddea6d1ae6e43ca6aa7a37')
                     .then(res => res.json())
                     .then((out) => {
-                    console.log('Output: ', out.poster_path);
                     return document.getElementById('dynamicImg{{ movie.id }}').src = ('https://image.tmdb.org/t/p/original'+out.poster_path);
                     }).catch(err => console.error(err))
             </script>

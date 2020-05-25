@@ -1,18 +1,18 @@
-from flask import Flask
+from flask import Flask, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql.expression import func
 from flask import render_template
-from sqlalchemy.orm import sessionmaker
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:@localhost:3306/movies'
 
 db = SQLAlchemy(app)
-Session = sessionmaker(bind=db)
-session = Session()
 
 
 class Movie(db.Model):
+    __searchable__ = ['title', 'overview']
     __tablename__ = 'movies_metadata'
     adult = db.Column(db.Text)
     belongs_to_collection = db.Column(db.Text)
@@ -66,13 +66,42 @@ class Movie(db.Model):
         self.vote_count = vote_count
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    try:
-        movies = Movie.query.all()
-        return render_template('index.html', pageTitle='Home', movies=movies)
-    except:
-        return '<h1>Something is broken.</h1>'
+    if request.method == 'POST':
+        if request.form.get('next'):
+            popular_movies = Movie.query.order_by(Movie.vote_average.desc()).limit(5).all()
+            recent_movies = Movie.query.order_by(Movie.release_date.desc()).limit(5).all()
+            movies = Movie.query.order_by(func.rand()).limit(10)
+            return render_template('index.html', pageTitle='Home', movies=movies, recent_movies=recent_movies,
+                                   popular_movies=popular_movies)
+        elif request.form.get('movie_id'):
+            movie_id = request.form.get('movie_id')
+            return redirect(url_for("detail", movie_id=movie_id))
+    else:
+        popular_movies = Movie.query.order_by(Movie.vote_average.desc()).limit(5).all()
+        recent_movies = Movie.query.order_by(Movie.release_date.desc()).limit(5).all()
+        movies = Movie.query.order_by(func.rand()).limit(10)
+        return render_template('index.html', pageTitle='Home', movies=movies, recent_movies=recent_movies,
+                               popular_movies=popular_movies)
+
+
+@app.route('/movie<movie_id>', methods=['GET', 'POST'])
+def detail(movie_id):
+    movie = Movie.query.filter_by(id=movie_id).first()
+    return render_template('movie.html', pageTitle='Détail', movie=movie)
+
+
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    if request.method == 'POST':
+        form = request.form
+        search_value = form['search_string']
+        search = "%{0}%".format(search_value)
+        results = Movie.query.filter(Movie.title.like(search)).all()
+        return render_template('search.html', pageTitle='Search', movies=results)
+    else:
+        return render_template('search.html', pageTitle='Search')
 
 
 if __name__ == '__main__':

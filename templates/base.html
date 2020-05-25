@@ -1,5 +1,6 @@
 <!DOCTYPE>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,10 +19,12 @@
     <script src="https://kit.fontawesome.com/1f7457abdb.js"></script>
     <title>MoviesEarch</title>
 </head>
+
+
 <body>
 <!-- NAV -->
 <nav class="navbar navbar-expand-md navbar-light bg-dark">
-    <a href="#">
+    <a href="/">
         <i class="fas fa-film text-warning fa-2x"></i>
     </a>
     <button
@@ -50,15 +53,16 @@
         </li>
         <li class="nav-item"><a class="nav-link text-light font-weight-bold text-uppercase px-3" href="#">Contact</a></li>
     </ul>
-    <form class="form-inline ml-3">
-        <div class="input-group">
+    <form method="post" class="form-inline ml-3">
+            <div class="input-group">
             <input
                 type="text"
                 class="form-control"
+                name="search_string"
                 placeholder="Quel film ?"
             >
             <div class="input-group-append">
-                <button type="button" class="btn bg-light">
+                <button type="submit" formaction="/search" class="btn bg-light">
                     <i class="fas fa-search text-muted"></i>
                 </button>
             </div>

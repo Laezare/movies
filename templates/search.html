@@ -1,0 +1,68 @@
+<!DOCTYPE>
+<html lang="en">
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Movies</h1>
+
+    <section class="moovie">
+
+    {% for movie in movies %}
+
+        <div class="moovie_item" id="data">
+
+            <p>{{movie.title}}</p>
+
+            <script>
+                    fetch('https://api.themoviedb.org/3/movie/{{ movie.id }}?api_key=efb085c962ddea6d1ae6e43ca6aa7a37')
+                    .then(res => res.json())
+                    .then((out) => {
+                    console.log('Output: ', out.poster_path);
+                    return document.getElementById('dynamicImg{{ movie.id }}').src = ('https://image.tmdb.org/t/p/original'+out.poster_path);
+                    }).catch(err => console.error(err))
+            </script>
+
+            <img id="dynamicImg{{ movie.id }}" src="" onerror="this.src='static/images/default.jpg'" />
+            <!--
+            {% if movie.belongs_to_collection %}
+                <img src="https://image.tmdb.org/t/p/original{{ (movie.belongs_to_collection).split(":")[3].split("'")[1] }}" onerror="this.src='static/images/default.jpg'">
+            {% elif movie.poster_path %}
+                <img src="https://image.tmdb.org/t/p/original{{ movie.poster_path }}" onerror="this.src='static/images/default.jpg'">
+            {% endif %}
+            -->
+        </div>
+        <form method="post">
+            <input type="hidden" name="movie_id"  value="{{ movie.id }}"/>
+            <input type="submit" value="Détail" />
+        </form>
+    {% endfor %}
+    </section>
+    <form method="post">
+        <input type="text" name="search_string">
+        <input type="submit" formaction="/search" value="search">
+    </form>
+
+{% endblock %}
+
+
+
+
+
+
+<!-- SCRIPTS-->
+<script
+src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+crossorigin="anonymous"
+></script>
+<script
+src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+crossorigin="anonymous"
+></script>
+<!-- END OF SCRIPTS -->
+</body>
+</html>
+
+
