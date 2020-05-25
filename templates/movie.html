@@ -5,14 +5,33 @@
 
 {% block content %}
 
-    <h1>Movie</h1>
+    <h1 class="title">{{ movie.title }}</h1>
+
+    <span>
+        <p class="genres" style="background-color: grey; padding-bottom: 30px; padding-left: 18%; margin-bottom: -20px">
+                {% set genres_liste = movie.genres.split(", 'name':") %}
+                {% for genre in genres_liste[1:] %}
+                     {{ genre.split("'")[1] }}
+                {% endfor %}
+        <p/>
+    </span>
 
     <section class="moovie">
+         <script>
+                    fetch('https://api.themoviedb.org/3/movie/{{ movie.id }}?api_key=efb085c962ddea6d1ae6e43ca6aa7a37')
+                    .then(res => res.json())
+                    .then((out) => {
+                    return document.getElementById('dynamicImg{{ movie.id }}').src = ('https://image.tmdb.org/t/p/original'+out.poster_path);
+                    }).catch(err => console.error(err))
+            </script>
 
-        <h1>{{ movie.title }}</h1>
-        <p>
+            <img id="dynamicImg{{ movie.id }}" src="" onerror="this.src='static/images/default.jpg'" />
+        <div>
+        <h3 class="title">Synopsis</h3>
+        <p class="overview">
             {{ movie.overview }}
         </p>
+        </div>
     </section>
 
 {% endblock %}

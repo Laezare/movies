@@ -8,8 +8,18 @@ html, body {
     z-index: 101;
 }
 
-.moovie_random, .moovie_popular {
+.input-group > .custom-select:not(:last-child), .input-group > .form-control:not(:last-child) {
+    margin-top: 15px;
+}
+
+.moovie_random, .moovie_popular, .moovie_recent {
     justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    background-color: grey;
+}
+
+.moovie {
     display: flex;
     flex-wrap: wrap;
     background-color: grey;
@@ -18,9 +28,25 @@ html, body {
 .title {
     color: white;
     background-color: grey;
-    padding-top: 20px;
-    padding-left: 20%;
+    padding-top: 50px;
+    padding-left: 450px;
+    padding-bottom: 50px;
     margin-bottom: -5px;
+}
+
+.moovie_recent_item, .moovie_item {
+    flex: 0 0 0;
+    margin-top: 30px;
+    margin-left: 10px;
+    margin-right: 10px ;
+    position: relative;
+    width: 50%;
+}
+
+.moovie_recent_item img {
+    filter: drop-shadow(0 0 0.75rem black);
+    width: 300px;
+    height: 475px;
 }
 
 .moovie_popular_item {
@@ -38,13 +64,30 @@ html, body {
     margin: 10px;
 }
 
+.moovie_item img {
+    padding-left: -20%;
+    width: 300px;
+    height: 475px;
+    filter: drop-shadow(0 0 0.75rem black);
+}
+
 .moovie_random_item img {
-    width: 100%;
+    width: 570.5px;
+    height: 856px;
+    filter: drop-shadow(0 0 0.75rem black);
 }
 
 .moovie_popular_item img {
     width: 300px;
     height: 475px;
+    filter: drop-shadow(0 0 0.75rem black);
+}
+
+.moovie img {
+    width: 300px;
+    height: 475px;
+    margin-left: 18%;
+    filter: drop-shadow(0 0 0.75rem black);
 }
 
 .genres{
@@ -55,8 +98,15 @@ html, body {
     max-width: 300px;
 }
 
+.overview {
+    padding-left: 15%;
+    padding-top: 50px;
+    padding-right: 30%;
+    font-size: 20px;
+}
+
 .moovie_popular_item .input {
-  position: absolute;
+  position: relative;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -68,4 +118,22 @@ html, body {
   border: none;
   cursor: pointer;
   border-radius: 5px;
+}
+
+[type="button"]:not(:disabled), [type="reset"]:not(:disabled), [type="submit"]:not(:disabled), button:not(:disabled) {
+    margin-top: 15px;
+    box-shadow: 0px 1px 0px 0px #fff6af;
+	background:linear-gradient(to bottom, #ffec64 5%, #ffab23 100%);
+	background-color:#ffec64;
+	border-radius:6px;
+	border:1px solid #ffaa22;
+	display:inline-block;
+	cursor:pointer;
+	color:#333333;
+	font-family:Arial;
+	font-size:15px;
+	font-weight:bold;
+	padding:8px 15px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #ffee66;
 }

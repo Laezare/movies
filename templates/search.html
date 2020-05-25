@@ -4,7 +4,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Movies</h1>
+<h1 class="title">Résultat(s) pour "{{ search }}"</h1>
 
     <section class="moovie">
 
@@ -38,10 +38,6 @@
         </form>
     {% endfor %}
     </section>
-    <form method="post">
-        <input type="text" name="search_string">
-        <input type="submit" formaction="/search" value="search">
-    </form>
 
 {% endblock %}
 

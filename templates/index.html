@@ -9,6 +9,56 @@
         <h1 class="title">Films à l'affiche</h1>
     </div>
 
+    <section class="moovie_recent">
+
+
+
+    {% for rm in recent_movies %}
+
+        <div class="moovie_recent_item" id="data">
+
+
+            <script>
+                    fetch('https://api.themoviedb.org/3/movie/{{ rm.id }}?api_key=efb085c962ddea6d1ae6e43ca6aa7a37')
+                    .then(res => res.json())
+                    .then((out) => {
+                    return document.getElementById('dynamicImg{{ rm.id }}').src = ('https://image.tmdb.org/t/p/original'+out.poster_path);
+                    }).catch(err => console.error(err))
+            </script>
+
+            <img id="dynamicImg{{ rm.id }}" src="" onerror="this.src='static/images/default.jpg'" />
+            <!--
+            {% if rm.belongs_to_collection %}
+                <img src="https://image.tmdb.org/t/p/original{{ (rm.belongs_to_collection).split(":")[3].split("'")[1] }}" onerror="this.src='static/images/default.jpg'">
+            {% elif rm.poster_path %}
+                <img src="https://image.tmdb.org/t/p/original{{ rm.poster_path }}" onerror="this.src='static/images/default.jpg'">
+            {% endif %}
+            -->
+            <span>
+            <form method="post">
+                <input type="hidden" name="movie_id"  value="{{ rm.id }}"/>
+                <input type="submit" value="Détail" />
+            </form>
+                <h3 class="movie_title">{{rm.title}}</h3>
+            <span>
+                <p class="genres">
+                {% set genres_liste = rm.genres.split(", 'name':") %}
+                {% for genre in genres_liste[1:] %}
+                     {{ genre.split("'")[1] }}
+                {% endfor %}
+                <p/></span>
+            </span>
+        </div>
+
+
+    {% endfor %}
+
+    </section>
+
+    <div>
+        <h1 class="title">Films recommandés par les utilisateurs</h1>
+    </div>
+
     <section class="moovie_popular">
 
 
@@ -63,7 +113,7 @@
 
         <div class="moovie_random_item" id="data">
 
-            <p>{{movie.title}}</p>
+            <h2>{{movie.title}}</h2>
 
             <script>
                     fetch('https://api.themoviedb.org/3/movie/{{ movie.id }}?api_key=efb085c962ddea6d1ae6e43ca6aa7a37')
@@ -81,15 +131,17 @@
                 <img src="https://image.tmdb.org/t/p/original{{ movie.poster_path }}" onerror="this.src='static/images/default.jpg'">
             {% endif %}
             -->
+            <span>
+            <form method="post">
+                <input type="hidden" name="movie_id"  value="{{ movie.id }}"/>
+                <input class="button" type="submit" value="Détail" />
+            </form>
+            </span>
         </div>
-        <form method="post">
-            <input type="hidden" name="movie_id"  value="{{ movie.id }}"/>
-            <input type="submit" value="Détail" />
-        </form>
     {% endfor %}
     </section>
     <form method="post">
-        <input type="submit" name="next" placeholder="Next Movies"></input>
+        <input type="submit" name="next" placeholder="Next Movies" style="margin-left: 10%">
     </form>
 
 {% endblock %}

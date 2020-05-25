@@ -72,7 +72,7 @@ def index():
         if request.form.get('next'):
             popular_movies = Movie.query.order_by(Movie.vote_average.desc()).limit(5).all()
             recent_movies = Movie.query.order_by(Movie.release_date.desc()).limit(5).all()
-            movies = Movie.query.order_by(func.rand()).limit(10)
+            movies = Movie.query.order_by(func.rand()).limit(8)
             return render_template('index.html', pageTitle='Home', movies=movies, recent_movies=recent_movies,
                                    popular_movies=popular_movies)
         elif request.form.get('movie_id'):
@@ -81,7 +81,7 @@ def index():
     else:
         popular_movies = Movie.query.order_by(Movie.vote_average.desc()).limit(5).all()
         recent_movies = Movie.query.order_by(Movie.release_date.desc()).limit(5).all()
-        movies = Movie.query.order_by(func.rand()).limit(10)
+        movies = Movie.query.order_by(func.rand()).limit(8)
         return render_template('index.html', pageTitle='Home', movies=movies, recent_movies=recent_movies,
                                popular_movies=popular_movies)
 
@@ -95,11 +95,18 @@ def detail(movie_id):
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     if request.method == 'POST':
-        form = request.form
-        search_value = form['search_string']
-        search = "%{0}%".format(search_value)
-        results = Movie.query.filter(Movie.title.like(search)).all()
-        return render_template('search.html', pageTitle='Search', movies=results)
+        if request.form.get('movie_id'):
+            movie_id = request.form.get('movie_id')
+            return redirect(url_for("detail", movie_id=movie_id))
+        else:
+            form = request.form
+            search_value = form['search_string']
+            search = "%{0}%".format(search_value)
+            if len(search) > 2:
+                results = Movie.query.filter(Movie.title.like(search)).all()
+                return render_template('search.html', pageTitle='Search', movies=results, search=search_value)
+            else:
+                return '<h1>Search function need more than 2 characters</h1>'
     else:
         return render_template('search.html', pageTitle='Search')
 
